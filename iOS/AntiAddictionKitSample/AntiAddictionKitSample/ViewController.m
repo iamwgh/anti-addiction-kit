@@ -45,18 +45,6 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     
     self.isSdkInitialized = NO;
     
-    // 设置服务器地址
-//    [AntiAddictionKit setHost:@"http://172.26.129.132:7001"];
-    
-    //显示切换账号按钮
-//    AntiAddictionKit.configuration.showSwitchAccountButton = NO;
-    
-//    // 游客总时长（默认3600）
-//    AntiAddictionKit.configuration.guestTotalTime = 120;
-//    // 第一次时间浮窗展示时的剩余时间（默认900）
-//    AntiAddictionKit.configuration.firstAlertTipRemainTime = 115;
-//    // 倒计时浮窗开始展示时的剩余时间（默认60）
-//    AntiAddictionKit.configuration.countdownAlertTipRemainTime = 110;
 }
 
 - (void)dealloc {
@@ -177,9 +165,8 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
 - (NSArray *)buttonArray {
     return @[
         @[@"功能配置❓可选\n(实名/付费/时长)\n不设置即默认值）", @"configSdkFunctions"],
-        @[@"时长配置❓可选\n不设置即默认值", @"configSdkTimeLimit"],
-        @[@"设置服务器Host❓\n(单机模式不填,联网模式必填)\n(单机/联网两种模式独立存在，判断条件=Host是否在初始化前设置。)", @"setServerHost"],
-        @[@"初始化‼️\n(联网版=1.设置服务器 2.初始化)。\n(若先初始化，即为单机版。)", @"initSdk"],
+        @[@"未成年日常可玩时间配置（非节假日） ❓可选\n 不设置即默认值（周五,周六,周日的20：00-21：00）",@"minorPlay"],
+        @[@"初始化‼️\n(单机版。)", @"initSdk"],
         @[@"登录用户‼️\n(强制)\n（id，type）", @"login"],
         @[@"退出登录", @"logout"],
         @[@"更新用户类型\n（type）", @"updateUserType"],
@@ -225,69 +212,38 @@ static NSString *const onlineTimeNotificationName = @"NSNotification.Name.totalO
     [self presentViewController:alert animated:true completion:nil];
 }
 
-- (void)configSdkTimeLimit {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"防沉迷总时长配置" message:@"使用方法跟sdk配置按钮类似\n\n不填即使用默认值，\n请填写【正整数】（单位秒）\n例如游客20s 15s 10s，\n\n请确保：总时长>首次浮窗>倒计时时间，\n\n要么都填，要么都不填，否则可能出错！\n填错出现问题请杀掉App重试！" preferredStyle:UIAlertControllerStyleAlert];
+- (void)minorPlay{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"防沉迷未成年日常时间配置" message:@"日期格式：周五,周六,周日（英文逗号,不填即默认）\n可玩开始时间格式(小时:分)：20:00(英文冒号)\n可玩结束时间格式：21:00" preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"游客每日时长，默认3600s";
-    }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"未成年节假日时长，默认10800s";
+        textField.placeholder = @"可玩日期，默认周五,周六,周日";
     }];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"未成年非假日时长，默认5400s";
+        textField.placeholder = @"可玩开始时间，默认20:00";
     }];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"首次浮窗提醒时间，默认剩900s";
+        textField.placeholder = @"可玩结束时间，默认21:00";
     }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"倒计时浮窗提醒时间，默认剩60s";
-    }];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        if ([[alert.textFields objectAtIndex:0].text intValue] > 0) {
-            AntiAddictionKit.configuration.guestTotalTime = [[alert.textFields objectAtIndex:0].text intValue];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"111--%@--%d",[alert.textFields objectAtIndex:0].text,[[alert.textFields objectAtIndex:0].text intValue]);
+        if ([[alert.textFields objectAtIndex:0].text length] > 0) {
+            NSString *playDay = [alert.textFields objectAtIndex:0].text;
+            NSArray *playDayArr = [playDay componentsSeparatedByString:@","];
+            NSLog(@"111--%@",playDayArr);
+            AntiAddictionKit.configuration.minorPlayDay = playDayArr;
         }
-        if ([[alert.textFields objectAtIndex:1].text intValue] > 0) {
-            AntiAddictionKit.configuration.minorHolidayTotalTime = [[alert.textFields objectAtIndex:1].text intValue];
+        if ([[alert.textFields objectAtIndex:1].text length]>0) {
+            AntiAddictionKit.configuration.minorPlayStart = [alert.textFields objectAtIndex:1].text;
         }
-        if ([[alert.textFields objectAtIndex:2].text intValue] > 0) {
-          AntiAddictionKit.configuration.minorCommonDayTotalTime = [[alert.textFields objectAtIndex:2].text intValue];
-        }
-        if ([[alert.textFields objectAtIndex:3].text intValue] > 0) {
-            AntiAddictionKit.configuration.firstAlertTipRemainTime = [[alert.textFields objectAtIndex:3].text intValue];
-        }
-        if ([[alert.textFields objectAtIndex:4].text intValue] > 0) {
-            AntiAddictionKit.configuration.countdownAlertTipRemainTime = [[alert.textFields objectAtIndex:4].text intValue];
+        if ([[alert.textFields objectAtIndex:2].text length]>0) {
+            AntiAddictionKit.configuration.minorPlayEnd = [alert.textFields objectAtIndex:2].text;
         }
     }];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    [alert addAction:okAction];
-    [alert addAction:cancelAction];
-    [self presentViewController:alert animated:true completion:nil];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:okAction];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:true completion:nil];
 }
 
-- (void)setServerHost {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"服务器Host" message:@"例如https://gameapi.com\n\n默认不设置=单机版，\n\n一旦设置，则视为联网版\n\n地址填写错误会导致联网版防沉迷机制失效。" preferredStyle:UIAlertControllerStyleAlert];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.placeholder = @"例如https://gameapi.com";
-        textField.text = @"http://172.26.129.132:7001";
-    }];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [AntiAddictionKit setHost:[alert.textFields objectAtIndex:0].text];
-        self.isSdkServerEnabled = YES;
-    }];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    [alert addAction:okAction];
-    [alert addAction:cancelAction];
-    [self presentViewController:alert animated:true completion:nil];
-}
 
 - (void)initSdk {
     [AntiAddictionKit init:self];

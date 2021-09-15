@@ -45,8 +45,8 @@ extern "C" {
     }
     
     void AntiAddictionSetHost(const char *host) {
-        NSString *hostString = [NSString stringWithUTF8String:host];
-        [AntiAddictionKit setHost:hostString];
+//        NSString *hostString = [NSString stringWithUTF8String:host];
+//        [AntiAddictionKit setHost:hostString];
     }
     
     void AntiAddictionLogin(const char *userId,int userType) {

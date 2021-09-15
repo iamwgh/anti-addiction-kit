@@ -4,26 +4,22 @@ import UIKit
 fileprivate let kDefaultAlertTipText: String = "适度游戏益脑，沉迷游戏伤身，合理安排时间，享受健康生活。"
 
 enum AlertTipType {
-    case lessThan15Minutes(_ level: TimeLimitLevel, isCurfew: Bool = false)
-    case lessThan60seconds(_ level: TimeLimitLevel, _ seconds: Int, isCurfew: Bool = false)
+    case lessThan15Minutes(_ level: TimeLimitLevel)
+    case lessThan60seconds(_ level: TimeLimitLevel, _ seconds: Int)
     
     var attributedString: NSAttributedString {
         
         switch self {
-        case .lessThan15Minutes(let level, let isCurfew):
+        case .lessThan15Minutes(let level):
             let minutes = max(1, AntiAddictionKit.configuration.firstAlertTipRemainTime/kSecondsPerMinute)
-            if level == .guest {
-                return attributedAlertTipText("您的游戏体验时间还剩余 \(minutes) 分钟，登记实名信息后可深度体验。")
-            } else if level == .minor {
-                return isCurfew ? attributedAlertTipText("距离健康保护时间还剩余 \(minutes) 分钟，请注意适当休息。") : attributedAlertTipText("您今日游戏时间还剩余 \(minutes) 分钟，请注意适当休息。")
+            if level == .minor {
+                return  attributedAlertTipText("您今日游戏时间还剩余 \(minutes) 分钟，请注意适当休息。")
             }
             //成年人
             return attributedAlertTipText(kDefaultAlertTipText)
-        case .lessThan60seconds(let level, let seconds, let isCurfew):
-            if level == .guest {
-                return attributedAlertTipText("您的游戏体验时间还剩余 \(seconds) 秒，登记实名信息后可深度体验。")
-            } else if level == .minor {
-                return isCurfew ? attributedAlertTipText("距离健康保护时间还剩余 \(seconds) 秒，请注意适当休息。") : attributedAlertTipText("您今日游戏时间还剩余 \(seconds) 秒，请注意适当休息。")
+        case .lessThan60seconds(let level, let seconds):
+            if level == .minor {
+                return attributedAlertTipText("您今日游戏时间还剩余 \(seconds) 秒，请注意适当休息。")
             }
             //成年人
             return attributedAlertTipText(kDefaultAlertTipText)
@@ -68,7 +64,7 @@ final class AlertTip {
     
     class func show(_ type: AlertTipType) {
         switch type {
-        case .lessThan60seconds(_, _, isCurfew: _):
+        case .lessThan60seconds(_, _):
             if userTappedToDismiss {
                 Logger.info("用户手动关闭过60s浮窗，因此不再显示倒计时浮窗")
                 return

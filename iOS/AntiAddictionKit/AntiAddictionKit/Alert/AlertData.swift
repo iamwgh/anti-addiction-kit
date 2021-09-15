@@ -15,32 +15,30 @@ public enum AlertType {
 
 extension AlertType {
     enum TimeLimitAlertContent {
-        case guestLogin(minutes: Int, isFirstLogin: Bool)
+        case guestLogin
         case guestGameOver(minutes: Int)
-        case minorGameOver(minutes: Int = 0, isCurfew: Bool)
+        case minorGameOver(minutes: Int = 0, canPlay: Bool)
         
         var title: String {
             return "健康游戏提示"
         }
         
         var body: String {
+            let dayStr = AntiAddictionKit.configuration.minorPlayDay.joined(separator: "、")
+         
             switch self {
-            case .guestLogin(let minutes, let isFirstLogin):
-                let maxMinutes = max(1, minutes)
-                if isFirstLogin {
-                    return "您当前为游客账号，根据国家相关规定，游客账号享有 \(maxMinutes) 分钟游戏体验时间。登记实名信息后可深度体验。"
-                } else {
-                    return "您当前为游客账号，游戏体验时间还剩余 \(maxMinutes) 分钟。登记实名信息后可深度体验。"
-                }
+            case .guestLogin:
+                    return "您的账号未完成实名认证，为了符合国家相关规定，不影响您的游戏体验，请尽快完善实名信息。"
+                
             case .guestGameOver(let minutes):
                 let maxMinutes = max(1, minutes)
                 return "您的游戏体验时长已达 \(maxMinutes) 分钟。登记实名信息后可深度体验。"
-            case .minorGameOver(let minutes, let isCurfew):
+            case .minorGameOver(let minutes, let canplay):
                 let maxMinutes = max(1, minutes)
-                if isCurfew {
-                    return "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。"
+                if canplay {
+                    return "您当前为未成年账号，已被纳入防沉迷系统。根据国家相关规定，\(dayStr)及法定节假日 \(DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayStart).hour) 点 - \(DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayEnd).hour)  点之外为健康保护时段。您今日游戏时间还剩余 \(maxMinutes)分钟，请注意适当休息。 "
                 } else {
-                    return "您今日游戏时间已达 \(maxMinutes) 分钟。根据国家相关规定，今日无法再进行游戏。请注意适当休息。"
+                    return "您当前为未成年账号，已被纳入防沉迷系统。根据国家相关规定，\(dayStr)及法定节假日 \(DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayStart).hour) 点 -  \(DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayEnd).hour) 点之外为健康保护时段。当前时间段无法游玩，请合理安排时间"
                 }
             }
         }

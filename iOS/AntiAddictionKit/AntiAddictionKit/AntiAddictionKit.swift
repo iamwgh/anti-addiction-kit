@@ -37,10 +37,10 @@ public final class AntiAddictionKit: NSObject {
     
     /// 设置服务器地址，如果地址正确，则计时、实名、付费通过服务器统计；如果地址设置有误，则防沉迷都会失效。不设置，则默认开启本地防沉迷机制。
     /// - Parameter host: 服务器根地址，例如 `https://gameapi.com`
-    public class func setHost(_ host: String) {
-        AntiAddictionKit.configuration.host = host
-        
-        Logger.info("服务器Host已设置: \(host)")
+    private class func setHost(_ host: String) {
+//        AntiAddictionKit.configuration.host = host
+//        Logger.info("服务器Host已设置: \(host)")
+        Logger.info("该SDK不支持联网版，如需联网版，至”https://github.com/taptap/anti-addiction-kit“【详情请阅读文档】")
     }
     
     /// AAKit 初始化方法

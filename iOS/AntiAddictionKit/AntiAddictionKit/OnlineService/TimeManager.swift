@@ -95,38 +95,15 @@ struct TimeManager {
                                 lastServerTimestamp = newServerTimestamp
                                 
                                 if account.type == .unknown {
-                                    //游客
-                                    //没时间了
-                                    if remainTime <= 0 {
-                                        Logger.debug("游客用户，没时间了，弹窗")
-                                        Router.closeAlertTip()
-                                        AntiAddictionKit.sendCallback(result: .noRemainTime, message: "游客用户游戏时长限制")
-                                        Router.openAlertController(AlertData(type: .timeLimitAlert,
-                                                  title: title,
-                                                  body: Notice.guestLimit.content,
-                                                  remainTime: 0),forceOpen: true)
-                                        return
-                                    }
-                                    // 游客剩余时长1分钟倒计时浮窗
-                                    if remainTime <= countdownBeginSeconds {
-                                        DispatchQueue.main.async {
-                                            NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false])
-                                        }
-                                        return
-                                    }
-                                    // 游客15分钟弹窗
-                                    let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
-                                    if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
-                                        DispatchQueue.main.async {
-                                            NotificationCenter.default.post(name: .startFiftyMinutesCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
-                                        }
-                                        return
-                                    }
-                                    if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
-                                        Logger.debug("游客15分钟提示")
-                                        Router.openAlertTip(.lessThan15Minutes(.guest, isCurfew: false))
-                                        return
-                                    }
+                                 
+                                    var content: AlertType.TimeLimitAlertContent
+                                    content = AlertType.TimeLimitAlertContent.guestLogin
+                                    Router.openAlertController(AlertData(type: .timeLimitAlert,
+                                                                         title: content.title,
+                                                                         body: content.body,
+                                                                         remainTime: 0))
+                                    return
+                              
                                 }
                                     
                                 else if account.type == .adult {
@@ -169,49 +146,12 @@ struct TimeManager {
                                         }
                                         if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
                                             Logger.debug("未成年人距离宵禁15分钟浮窗提醒")
-                                            Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: true))
+                                            Router.openAlertTip(.lessThan15Minutes(.minor))
                                             return
                                         }
                                         
                                     }
-                                        
-                                    else {
-                                        // 非宵禁
-                                        // 没时间了
-                                        if remainTime <= 0 {
-                                            Logger.debug("未成年人每日游戏时间耗尽，弹窗")
-                                            AntiAddictionKit.sendCallback(result: .noRemainTime, message: "未成年人每日游戏时长限制")
-                                            Router.closeAlertTip()
-                                            Router.openAlertController(AlertData(type: .timeLimitAlert,
-                                                                                 title: title,
-                                                                                 body: Notice.childLimit(isHoliday: DateHelper.isHoliday(Date())).content,
-                                                                                 remainTime: 0))
-                                            
-                                            return
-                                        }
-                                        // 未成年人游戏剩余时长倒计时启动
-                                        if remainTime <= countdownBeginSeconds {
-                                            DispatchQueue.main.async {
-                                                NotificationCenter.default.post(name: .startSixtySecondsCountdownNotification, object: nil, userInfo: ["isCurfew": false])
-                                            }
-                                            return
-                                        }
-                                        
-                                        // 未成年人游戏剩余时长15分钟浮窗提醒
-                                        let firstAlertTipRemainTime = AntiAddictionKit.configuration.firstAlertTipRemainTime
-                                        if remainTime > firstAlertTipRemainTime && remainTime < firstAlertTipRemainTime + commonTimerInterval {
-                                            DispatchQueue.main.async {
-                                                NotificationCenter.default.post(name: .startFiftyMinutesCountdownNotification, object: nil, userInfo: ["isCurfew": false, "countdownBeginTime": remainTime])
-                                            }
-                                            return
-                                        }
-                                        if remainTime == AntiAddictionKit.configuration.firstAlertTipRemainTime {
-                                            Logger.debug("未成年人每日游戏时间剩余15分钟提示")
-                                            Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: false))
-                                            return
-                                        }
-                                        
-                                    }
+                               
                                 }
         },failureHandler: {
             //上传服务器失败，也要更新时间戳，以保留本地已统计的时间
@@ -285,7 +225,7 @@ struct TimeManager {
                     countdownTimer?.suspend()
                 } else {
                     Logger.debug("未成年倒计时提示")
-                    Router.openAlertTip(.lessThan60seconds(.minor, leftTimes, isCurfew: isCurfew))
+                    Router.openAlertTip(.lessThan60seconds(.minor, leftTimes))
                     return
                 }
                 
@@ -367,7 +307,7 @@ struct TimeManager {
                     return
                 } else {
                     Logger.debug("未成年15分钟提示")
-                    Router.openAlertTip(.lessThan15Minutes(.minor, isCurfew: isCurfew))
+                    Router.openAlertTip(.lessThan15Minutes(.minor))
                     fTimer.suspend()
                     return
                 }
