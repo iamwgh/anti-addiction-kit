@@ -2,6 +2,8 @@ package com.seraph.gameprotection;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -36,12 +39,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Observable;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button login,login2,login3,pay,init_land,init_port,logout,chat,thirdInit,dialogFloat,pay2,netLink
             ,third_real,pay3;
+
+    CheckBox cb1, cb2, cb3, cb4, cb5, cb6, cb7;
+    Spinner spinnerStartTimeHours, spinnerStartTimeSecond, spinnerEndTimeHours, spinnerEndTimeSecond;
     TextView textView;
     Spinner third_real_item;
     EditText id1,id2,id3;
@@ -70,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     login.setEnabled(false);
                     login2.setEnabled(false);
                     login3.setEnabled(false);
+                    showTimeConfigView(false);
                     break;
             }
         }
@@ -80,22 +90,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             textView.setText("剩余： " + intent.getIntExtra("time",0) + " 秒");
         }
     };
+
+    private ArrayList<Integer> hoursList, secondList;
+    private ArrayList<Integer> dayOfWeekList = new ArrayList<>();
+
+    private MutableLiveData<Integer> startHourLD, startSecondLD, endHourLD, endSecondLD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        initTimeArrays();
        AntiAddictionKit.getCommonConfig()
-               .gusterTime(18 * 60)
-               .childCommonTime(16 * 60)
-               .childHolidayTime(20*60)
                .youngMonthPayLimit(200 * 100)
                .teenMonthPayLimit(150 * 100)
-               .dialogBackground("#fffff0")
-       .nightStrictStart(23*60*60);
+               .dialogBackground("#fffff0");
 
        AntiAddictionKit.getFunctionConfig()
-               .showSwitchAccountButton(false)
+               .showSwitchAccountButton(true)
                .useSdkOnlineTimeLimit(true);
 
         login = findViewById(R.id.login);
@@ -114,6 +128,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         netLink = findViewById(R.id.netLink);
         third_real = findViewById(R.id.third_real);
         third_real_item = findViewById(R.id.third_real_item);
+
+        cb1 = findViewById(R.id.cb_1);
+        cb2 = findViewById(R.id.cb_2);
+        cb3 = findViewById(R.id.cb_3);
+        cb4 = findViewById(R.id.cb_4);
+        cb5 = findViewById(R.id.cb_5);
+        cb6 = findViewById(R.id.cb_6);
+        cb7 = findViewById(R.id.cb_7);
+
+        spinnerStartTimeHours = findViewById(R.id.spinner_start_hours);
+        spinnerStartTimeSecond = findViewById(R.id.spinner_start_second);
+        spinnerEndTimeHours = findViewById(R.id.spinner_end_hours);
+        spinnerEndTimeSecond = findViewById(R.id.spinner_end_second);
 
         id1 = findViewById(R.id.et_id1);
         id2 = findViewById(R.id.et_id2);
@@ -157,6 +184,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        startHourLD = new MutableLiveData<>();
+        startSecondLD = new MutableLiveData<>();
+        endHourLD = new MutableLiveData<>();
+        endSecondLD = new MutableLiveData<>();
+        startHourLD.setValue(20);
+        startSecondLD.setValue(0);
+        endHourLD.setValue(21);
+        endSecondLD.setValue(0);
+        setupTimeRangeSpinner(spinnerStartTimeHours, hoursList, startHourLD, 20);
+        setupTimeRangeSpinner(spinnerStartTimeSecond, secondList, startSecondLD, 0);
+        setupTimeRangeSpinner(spinnerEndTimeHours, hoursList, endHourLD, 21);
+        setupTimeRangeSpinner(spinnerEndTimeSecond, secondList, endSecondLD, 0);
+
+
         login.setEnabled(false);
         login2.setEnabled(false);
         login3.setEnabled(false);
@@ -181,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         pay3.setEnabled(false);
                         logout.setEnabled(false);
                         chat.setEnabled(false);
+                        showTimeConfigView(true);
                         break;
                     case AntiAddictionKit.CALLBACK_CODE_PAY_NO_LIMIT:
                         toast(" pay no limit");
@@ -227,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case AntiAddictionKit.CALLBACK_CODE_LOGIN_SUCCESS:
                         toast("login success msg = " + msg);
                         Log.d("antiAddiction","-----login success----");
+                        showTimeConfigView(false);
                         break;
                 }
             }
@@ -307,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login.setEnabled(false);
                 login2.setEnabled(false);
                 login3.setEnabled(false);
+                showTimeConfigView(false);
                 break;
             case R.id.login2:
                 String id_2 = id2.getText().toString();
@@ -327,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login.setEnabled(false);
                 login2.setEnabled(false);
                 login3.setEnabled(false);
+                showTimeConfigView(false);
                 break;
             case R.id.login3:
                 String id_3 = id3.getText().toString();
@@ -347,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 login.setEnabled(false);
                 login2.setEnabled(false);
                 login3.setEnabled(false);
+                showTimeConfigView(false);
                 break;
             case R.id.logout:
                 AntiAddictionKit.logout();
@@ -371,13 +417,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.netLink:
                 netLinkState = !netLinkState;
-                if(netLinkState){
-                    AntiAddictionKit.getFunctionConfig().setHost("localhost:8080"); //游戏需要更换为自己服务器的域名
-                    netLink.setText("联网模式：开");
-                }else{
-                    AntiAddictionKit.getFunctionConfig().setHost(null);
-                    netLink.setText("联网模式：关");
-                }
+                Toast.makeText(this, "单机版防沉迷不支持联网模式", Toast.LENGTH_SHORT).show();
+//                if(netLinkState){
+//                    AntiAddictionKit.getFunctionConfig().setHost("localhost:8080"); //游戏需要更换为自己服务器的域名
+//                    netLink.setText("联网模式：开");
+//                }else{
+//                    AntiAddictionKit.getFunctionConfig().setHost(null);
+//                    netLink.setText("联网模式：关");
+//                }
                 break;
             case R.id.third_real:
                 AntiAddictionKit.updateUserType(third_real_type);
@@ -427,6 +474,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFail(int code, String message) {
                 LogUtil.logd("get token fail code = " + code + " msg= " + message);
 //                Toast.makeText(MainActivity.this,"网络连接失败 msg = " + message,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showTimeConfigView(boolean show) {
+        if (!show) {
+            cb1.setVisibility(View.GONE);
+            cb2.setVisibility(View.GONE);
+            cb3.setVisibility(View.GONE);
+            cb4.setVisibility(View.GONE);
+            cb5.setVisibility(View.GONE);
+            cb6.setVisibility(View.GONE);
+            cb7.setVisibility(View.GONE);
+            spinnerStartTimeHours.setVisibility(View.GONE);
+            spinnerStartTimeSecond.setVisibility(View.GONE);
+            spinnerEndTimeHours.setVisibility(View.GONE);
+            spinnerEndTimeSecond.setVisibility(View.GONE);
+        } else {
+            cb1.setVisibility(View.VISIBLE);
+            cb2.setVisibility(View.VISIBLE);
+            cb3.setVisibility(View.VISIBLE);
+            cb4.setVisibility(View.VISIBLE);
+            cb5.setVisibility(View.VISIBLE);
+            cb6.setVisibility(View.VISIBLE);
+            cb7.setVisibility(View.VISIBLE);
+            spinnerStartTimeHours.setVisibility(View.VISIBLE);
+            spinnerStartTimeSecond.setVisibility(View.VISIBLE);
+            spinnerEndTimeHours.setVisibility(View.VISIBLE);
+            spinnerEndTimeSecond.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initTimeArrays() {
+        hoursList = new ArrayList<>(24);
+        for (int i = 0; i < 24 ; i++) {
+            hoursList.add(i);
+        }
+        secondList = new ArrayList<>(60);
+        for (int i = 0; i < 60; i++) {
+            secondList.add(i);
+        }
+    }
+
+    private void setupTimeRangeSpinner(Spinner spinner, List<Integer> list, final MutableLiveData changeField, int defaultSelection) {
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list));
+        spinner.setSelection(defaultSelection);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                changeField.setValue(position);
+                AntiAddictionKit.getCommonConfig()
+                        .setTimeStrictStart(startHourLD.getValue() * 60 * 60 + startSecondLD.getValue() * 60)
+                        .setTimeStrictEnd(endHourLD.getValue() * 60 * 60 + endSecondLD.getValue() * 60);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

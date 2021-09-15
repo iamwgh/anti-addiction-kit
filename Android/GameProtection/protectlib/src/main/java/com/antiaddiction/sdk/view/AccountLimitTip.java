@@ -26,25 +26,32 @@ import java.util.regex.Pattern;
 
 public class AccountLimitTip extends BaseDialog implements View.OnClickListener {
     //游客第一次进入游戏提示或进入游戏时长未到60分钟提示
-    public final static int STATE_ENTER_NO_LIMIT = 0;
+//    public final static int STATE_ENTER_NO_LIMIT = 0;
     //游客进入游戏时时长已满60分钟
-    public final static int STATE_ENTER_LIMIT = 1;
+//    public final static int STATE_ENTER_LIMIT = 1;
     //游客在游戏中已满60分钟体验提示
-    public final static int STATE_QUIT_TIP = 2;
+//    public final static int STATE_QUIT_TIP = 2;
     //游客付费时，实名信息为空
-    public final static int STATE_PAY_TIP = 3;
+//    public final static int STATE_PAY_TIP = 3;
     //未成年进入游戏时宵禁时间或游戏时间额度用完
-    public final static int STATE_CHILD_ENTER_STRICT = 4;
+//    public final static int STATE_CHILD_ENTER_STRICT = 4;
     //未成年游戏中进入宵禁时间或游戏时间额度用完
-    public final static int STATE_CHILD_QUIT_TIP = 5;
+//    public final static int STATE_CHILD_QUIT_TIP = 5;
     //未成年游戏中付费或付费额度用完
     public final static int STATE_PAY_LIMIT = 6;
     //未成年人进入游戏时还有剩余时长
-    public final static int STATE_CHILD_ENTER_NO_LIMIT = 7;
+//    public final static int STATE_CHILD_ENTER_NO_LIMIT = 7;
     //身份证信息无效，但有游戏时间
-    public final static int STATE_INVALID_IDENTIFY_NO_LIMIT = 8;
+//    public final static int STATE_INVALID_IDENTIFY_NO_LIMIT = 8;
     //身份信息无效，且没有游戏时间
-    public final static int STATE_INVALID_IDENTIFY_LIMIT = 9;
+//    public final static int STATE_INVALID_IDENTIFY_LIMIT = 9;
+
+    // 未实名限制
+    public static final int STATE_UN_REAL_NAME_LIMIT = 0;
+    // 已实名未成年人不在可玩时间段限制 (周五、周六、周日、法定节假日 20:00 至 21:00)
+    public static final int STATE_MINOR_TIME_RANGE_LIMIT = 1;
+    // 已实名未成年人在可玩时间段内时长限制 (显示剩余时长) 登录时
+    public static final int STATE_MINOR_TIME_MAX_LIMIT = 2;
 
     private Button bt_real;
     private Button bt_quit;
@@ -109,41 +116,60 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         tv_title.setText(title == null ? "健康游戏提示" : title);
         tv_content.setText(convertString(this.content));
 
-        if (state == STATE_ENTER_LIMIT) {
-            //   bt_quit.setVisibility(View.GONE);
+        if (state == STATE_UN_REAL_NAME_LIMIT) {
+            // 显示 「去实名」、「切换账号」、「退出游戏」
             bt_enter.setVisibility(View.GONE);
-        } else if (state == STATE_ENTER_NO_LIMIT) {
-            bt_quit.setVisibility(View.GONE);
-            //  ll_switch.setVisibility(View.GONE);
-        } else if (state == STATE_QUIT_TIP) {
-            //  ll_switch.setVisibility(View.GONE);
-            bt_enter.setVisibility(View.GONE);
-        } else if (state == STATE_PAY_TIP) {
-            // tv_title.setText("健康消费提醒");
-            ll_switch.setVisibility(View.GONE);
-            bt_quit.setVisibility(View.GONE);
-        } else if (state == STATE_CHILD_ENTER_STRICT) {
+        } else if (state == STATE_MINOR_TIME_RANGE_LIMIT) {
+            // 显示 「退出游戏」 和 「切换账号」
             bt_real.setVisibility(View.GONE);
             bt_enter.setVisibility(View.GONE);
-        } else if (state == STATE_CHILD_QUIT_TIP) {
+        } else if (state == STATE_MINOR_TIME_MAX_LIMIT) {
+            // 只显示 「进入游戏」
             bt_real.setVisibility(View.GONE);
-            //   ll_switch.setVisibility(View.GONE);
-            bt_enter.setVisibility(View.GONE);
+            bt_quit.setVisibility(View.GONE);
+            tv_switch.setVisibility(View.GONE);
         } else if (state == STATE_PAY_LIMIT) {
             bt_enter.setText("返回游戏");
             bt_real.setVisibility(View.GONE);
             ll_switch.setVisibility(View.GONE);
             bt_quit.setVisibility(View.GONE);
-        } else if (state == STATE_CHILD_ENTER_NO_LIMIT) {
-            ll_switch.setVisibility(View.GONE);
-            bt_quit.setVisibility(View.GONE);
-            bt_real.setVisibility(View.GONE);
-        } else if (state == STATE_INVALID_IDENTIFY_NO_LIMIT) {
-            bt_quit.setVisibility(View.GONE);
-            ll_switch.setVisibility(View.GONE);
-        } else if (state == STATE_INVALID_IDENTIFY_LIMIT) {
-            bt_enter.setVisibility(View.GONE);
         }
+
+//        if (state == STATE_ENTER_LIMIT) {
+//            //   bt_quit.setVisibility(View.GONE);
+//            bt_enter.setVisibility(View.GONE);
+//        } else if (state == STATE_ENTER_NO_LIMIT) {
+//            bt_quit.setVisibility(View.GONE);
+//            //  ll_switch.setVisibility(View.GONE);
+//        } else if (state == STATE_QUIT_TIP) {
+//            //  ll_switch.setVisibility(View.GONE);
+//            bt_enter.setVisibility(View.GONE);
+//        } else if (state == STATE_PAY_TIP) {
+//            // tv_title.setText("健康消费提醒");
+//            ll_switch.setVisibility(View.GONE);
+//            bt_quit.setVisibility(View.GONE);
+//        } else if (state == STATE_CHILD_ENTER_STRICT) {
+//            bt_real.setVisibility(View.GONE);
+//            bt_enter.setVisibility(View.GONE);
+//        } else if (state == STATE_CHILD_QUIT_TIP) {
+//            bt_real.setVisibility(View.GONE);
+//            //   ll_switch.setVisibility(View.GONE);
+//            bt_enter.setVisibility(View.GONE);
+//        } else if (state == STATE_PAY_LIMIT) {
+//            bt_enter.setText("返回游戏");
+//            bt_real.setVisibility(View.GONE);
+//            ll_switch.setVisibility(View.GONE);
+//            bt_quit.setVisibility(View.GONE);
+//        } else if (state == STATE_CHILD_ENTER_NO_LIMIT) {
+//            ll_switch.setVisibility(View.GONE);
+//            bt_quit.setVisibility(View.GONE);
+//            bt_real.setVisibility(View.GONE);
+//        } else if (state == STATE_INVALID_IDENTIFY_NO_LIMIT) {
+//            bt_quit.setVisibility(View.GONE);
+//            ll_switch.setVisibility(View.GONE);
+//        } else if (state == STATE_INVALID_IDENTIFY_LIMIT) {
+//            bt_enter.setVisibility(View.GONE);
+//        }
         if (!AntiAddictionKit.getFunctionConfig().getShowSwitchAccountButton()) {
             ll_switch.setVisibility(View.GONE);
         }
@@ -189,42 +215,50 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         if (id == Res.id(getContext(), "bt_guest_tip_real")) {
             //通知游戏，打开渠道实名认证页面
             if (!needShowRealName) {
-                String type = AntiAddictionKit.TIP_OPEN_BY_ENTER_NO_LIMIT;
-                if (state == STATE_ENTER_LIMIT) {
-                    type = AntiAddictionKit.TIP_OPEN_BY_ENTER_LIMIT;
-                } else if (state == STATE_QUIT_TIP) {
-                    type = AntiAddictionKit.TIP_OPEN_BY_TIME_LIMIT;
-                }
-                callResultListener(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, type);
+//                String type = AntiAddictionKit.TIP_OPEN_BY_ENTER_NO_LIMIT;
+//                if (state == STATE_ENTER_LIMIT) {
+//                    type = AntiAddictionKit.TIP_OPEN_BY_ENTER_LIMIT;
+//                } else if (state == STATE_QUIT_TIP) {
+//                    type = AntiAddictionKit.TIP_OPEN_BY_TIME_LIMIT;
+//                }
+                callResultListener(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, AntiAddictionKit.TIP_OPEN_REAL_NAME_LIMIT);
                 dismiss();
                 return;
             }
-            if (state != STATE_QUIT_TIP && state != STATE_CHILD_QUIT_TIP) {
-                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(new OnResultListener() {
-                    @Override
-                    public void onResult(int code, String desc) {
-                        //实名认证结果回调
-                        callResultListener(code, desc);
-                    }
-                }, strict, new RealNameAndPhoneDialog.BackPressListener() {
-                    @Override
-                    public void onBack() {
-                        if (onResultListener != null) {
-                            showAccountLimitTip(state, title, content, strict, onResultListener, needShowRealName);
-                        } else {
-                            showAccountLimitTip(state, title, content, strict, null);
-                        }
-                    }
-                });
-            } else {
-                //游客在游戏过程中时长额度用完，进入实名认证不显示关闭和返回
-                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(3, new OnResultListener() {
-                    @Override
-                    public void onResult(int code, String desc) {
-                        callResultListener(code, desc);
-                    }
-                });
-            }
+
+            // 强制实名，不显示关闭和返回
+            RealNameAndPhoneDialog.openRealNameAndPhoneDialog(3, new OnResultListener() {
+                @Override
+                public void onResult(int code, String desc) {
+                    callResultListener(code, desc);
+                }
+            });
+//            if (state != STATE_QUIT_TIP && state != STATE_CHILD_QUIT_TIP) {
+//                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(new OnResultListener() {
+//                    @Override
+//                    public void onResult(int code, String desc) {
+//                        //实名认证结果回调
+//                        callResultListener(code, desc);
+//                    }
+//                }, strict, new RealNameAndPhoneDialog.BackPressListener() {
+//                    @Override
+//                    public void onBack() {
+//                        if (onResultListener != null) {
+//                            showAccountLimitTip(state, title, content, strict, onResultListener, needShowRealName);
+//                        } else {
+//                            showAccountLimitTip(state, title, content, strict, null);
+//                        }
+//                    }
+//                });
+//            } else {
+//                //游客在游戏过程中时长额度用完，进入实名认证不显示关闭和返回
+//                RealNameAndPhoneDialog.openRealNameAndPhoneDialog(3, new OnResultListener() {
+//                    @Override
+//                    public void onResult(int code, String desc) {
+//                        callResultListener(code, desc);
+//                    }
+//                });
+//            }
             dismiss();
         } else if (id == Res.id(getContext(), "ll_guest_tip_switch")) {
             callResultListener(AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT, "");
@@ -232,14 +266,18 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
         } else if (id == Res.id(getContext(), "bt_guest_tip_quit")) {
             System.exit(0);
         } else if (id == Res.id(getContext(), "bt_guest_tip_enter")) {
-            //if( null != onResultListener) {
-            //游客登录时，游戏时间额度未用完
-            if (state == STATE_ENTER_NO_LIMIT || state == STATE_CHILD_ENTER_NO_LIMIT) {
-                callResultListener(0, "");
-            } else if (state == STATE_PAY_LIMIT || state == STATE_PAY_TIP) {//未成年人付费限制
+            if (state == STATE_PAY_LIMIT) {
                 callResultListener(AntiAddictionKit.CALLBACK_CODE_PAY_LIMIT, "");
+            } else if (state == STATE_MINOR_TIME_MAX_LIMIT) {
+                // 可玩时间段内还有剩余时间
+                callResultListener(0, "");
             }
-            //  }
+            //游客登录时，游戏时间额度未用完
+//            if (state == STATE_ENTER_NO_LIMIT || state == STATE_CHILD_ENTER_NO_LIMIT) {
+//                callResultListener(0, "");
+//            } else if (state == STATE_PAY_LIMIT || state == STATE_PAY_TIP) {//未成年人付费限制
+//                callResultListener(AntiAddictionKit.CALLBACK_CODE_PAY_LIMIT, "");
+//            }
             dismiss();
         }
     }
@@ -331,16 +369,18 @@ public class AccountLimitTip extends BaseDialog implements View.OnClickListener 
      * 当前提示框是否是限制性提示
      */
     private boolean isForceShow() {
-        switch (state) {
-            case STATE_ENTER_LIMIT:
-            case STATE_QUIT_TIP:
-            case STATE_CHILD_ENTER_STRICT:
-            case STATE_CHILD_QUIT_TIP:
-            case STATE_INVALID_IDENTIFY_LIMIT:
-                return true;
-            default:
-                return false;
-        }
+        return state == STATE_MINOR_TIME_RANGE_LIMIT
+                || state == STATE_UN_REAL_NAME_LIMIT;
+//        switch (state) {
+//            case STATE_MINOR_TIME_RANGE_LIMIT:
+//            case STATE_QUIT_TIP:
+//            case STATE_CHILD_ENTER_STRICT:
+//            case STATE_CHILD_QUIT_TIP:
+//            case STATE_INVALID_IDENTIFY_LIMIT:
+//                return true;
+//            default:
+//                return false;
+//        }
     }
 
     public static void forceClose(){

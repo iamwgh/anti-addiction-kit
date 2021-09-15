@@ -32,7 +32,7 @@ public class CountTimeService {
     //倒计时当前时间，由于本地倒计时后，游戏可能会回到后台，此时该时间停止计时
     private static long tipTime = 0L;//单位为秒
     private static boolean timerHasStarted = false;
-    private static int limit_strict = 0; //限制类型 0 无限制 1 宵禁 2 限制时长
+    private static int limit_strict = 0; //限制类型( old: 0 无限制 1 宵禁 2 限制时长) new: 0: 不受限制; 1:已实名不在可玩时间段限制; 2: 已实名在可玩时间内时长限制 ; 3: 未实名限制
     private static String tipContent;
     private static String tipTitle;
     private static long startTimestamp;
@@ -231,7 +231,7 @@ public class CountTimeService {
             public void onSuccess(JSONObject response) {
                 if (null != response && response.has("remainTime") && !isLogout) {
                     try {
-                        //1 宵禁 2 在线时长限制
+                        // 0: 不受限制; 1:已实名不在可玩时间段限制; 2: 已实名在可玩时间内时长限制 ; 3: 未实名限制
                         int restrictType = response.getInt("restrictType");
                         String description = response.getString("description");
                         int remainTime = response.getInt("remainTime");

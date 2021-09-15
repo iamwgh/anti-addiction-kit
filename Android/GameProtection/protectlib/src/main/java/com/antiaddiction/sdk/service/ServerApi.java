@@ -17,6 +17,7 @@ public enum ServerApi {
         this.api = api;
     }
     public String getApi(){
-        return AntiAddictionKit.getFunctionConfig().getHost() + api;
+        return "";
+//        return AntiAddictionKit.getFunctionConfig().getHost() + api;
     }
 }
