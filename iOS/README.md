@@ -37,8 +37,7 @@ import AntiAddictionKit
 ```
 
 ## 单机版 vs 联网版
-如果你已通过 `AntiAddictionKit-Server` 组件架设自有防沉迷服务器，可通过 `setHost("https://yourserver.com")`来开启联网版。
-请保证 `setHost()`中服务器地址的有效性，若无效，则防沉迷功能会形同虚设。联网版与单机版是独立的，通过 `host` 是否设置来判，`host`默认为空，即单机版。 
+当前SDK只支持单机版，如果需要联网版，请移步： https://github.com/taptap/anti-addiction-kit 。 
 
 ## 1. SDK 配置（采用默认值可跳过）
 ### 1.1 主要功能配置：
@@ -95,41 +94,25 @@ AntiAddictionKit.configuration.showSwitchAccountButton = true
 AntiAddictionKit.configuration.showSwitchAccountButton = YES;
 ```
 
-### 1.3 游戏时长限制配置：
- 防沉迷限制时长配置 |类型（单位秒）| 默认值| 说明 
+### 1.3 未成年可玩时间配置：
+ 未成年可玩时间配置 |类型| 默认值| 说明 
 --- | --- | --- | ---
-`minorCommonDayTotalTime` | `Int` | `5400` | 未成年人非节假日游戏限制时长`90`分钟
-`minorHolidayTotalTime` | `Int` | `10800` | 未成年人节假日游戏限制时长`180`分钟
-`guestTotalTime` | `Int` | `3600` | 游客用户（未实名）节假日游戏限制时长`60`分钟
-`firstAlertTipRemainTime` | `Int` | `900` | 第一次提醒用户时的剩余时长`15`分钟
-`countdownAlertTipRemainTime` | `Int` | `60` | 开始倒计时提醒用户时的剩余时长`1`分钟
+`minorPlayDay` | `Array` | `["周五","周六","周日"]` | 未成年人可玩日期，默认：周五、周六、周日
+`minorPlayStart` | `String` | `"20:00"` | 未成年人可玩日期开始时间，默认：20:00
+`minorPlayEnd` | `String` | `"21:00"` | 未成年人可玩日期结束时间，默认:21:00
+
 
 使用示例：
 
 ```swift or Objective-C
 // Swift
-AntiAddictionKit.configuration.minorCommonDayTotalTime = 5400
-AntiAddictionKit.configuration.minorHolidayTotalTime = 10800
-AntiAddictionKit.configuration.guestTotalTime = 3600
-AntiAddictionKit.configuration.firstAlertTipRemainTime = 900
-AntiAddictionKit.configuration.countdownAlertTipRemainTime = 60
+AntiAddictionKit.configuration.minorPlayDay = ["周五","周六","周日"]
+AntiAddictionKit.configuration.minorPlayStart = "20:00"
+AntiAddictionKit.configuration.minorPlayEnd = "21:00"
 ```
 
-### 1.4 宵禁配置：
- 宵禁时间配置 |类型（单位小时）| 默认值| 说明 
---- | --- | --- | ---
-`curfewHourStart` | `Int` | `22`，即晚上10点 | 未成年人防沉迷宵禁开始时间（24小时制）
-`curfewHourEnd` | `Int` | `8`，即早上8点| 未成年人节假日游戏限制时长（24小时制）
 
-使用示例：
-
-```swift or Objective-C
-// Swift
-AntiAddictionKit.configuration.curfewHourStart = 22
-AntiAddictionKit.configuration.curfewHourEnd = 8
-```
-
-### 1.5 支付限制金额配置（单位分）：
+### 1.4 支付限制金额配置（单位分）：
  防沉迷支付限制金额配置 |类型（单位分）| 默认值| 说明 
 --- | --- | --- | ---
 `singlePaymentAmountLimitJunior` | `Int` | `5000` | 8-15 岁单笔付费额度限制，单位分（默认 5000 分，即 50 元）

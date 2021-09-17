@@ -4,11 +4,15 @@ import UIKit
 
 /// 回传给游戏的信息编码
 enum AntiAddictionResult: Int {
+    
     case loginSuccess = 500 //用户登录成功
+    case  loginLimitWithUnRealName = 520  //用户未实名（新增）
     case logout = 1000 //用户切换账号
+   
     
     case noPayLimit = 1020 // 无付费限制
     case hasPayLimit  = 1025 //有付费限制，无法付费
+    
     
     case realNameRequest = 1060 //请求外部实名登记
     

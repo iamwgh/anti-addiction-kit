@@ -1,4 +1,11 @@
 
+###Unity v1.2.0 (iOS v1.2.0 & Android v1.2.0) 2020-09-17
+###### iOS 文件变更
+- `AntiAddictionKit.framework` 变动，版本号升级为v1.2.0
+
+##### Android 文件无变更
+- `antiLib.aar` 变更，版本号依然为 v1.2.0
+
 ### Unity v1.1.3 (iOS v1.1.3 & Android v1.1.2) 2020-04-29
 
 1. 修复游客时间bug

@@ -21,6 +21,16 @@ public final class Configuration: NSObject {
     /// AAKit 切换账号按钮是否显示
     public var showSwitchAccountButton: Bool = true
     
+    
+    /// 未成年可玩开始时间（字符串，格式为`小时:分钟`，24小时进制，默认`20:00`）方便配置具体到分钟
+    public var minorPlayStart: String = "20:00"
+    
+    /// 未成年可玩结束时间（字符串，格式为`小时:分钟`，24小时进制，默认`21:00`）方便配置具体到分钟
+    public var minorPlayEnd: String = "21:00"
+    
+    /// 未成年除了节假日可玩日期
+    public var minorPlayDay: Array = ["周五","周六","周日"]
+    
     /// 未成年人非节假日每日总时长 单位秒
     public var minorCommonDayTotalTime: Int = 90 * 60
     

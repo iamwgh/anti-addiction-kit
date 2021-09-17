@@ -8,6 +8,9 @@ import com.antiaddiction.sdk.utils.TimeUtil;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class AntiAddictionKit {
     //用户类型
     public final static int USER_TYPE_UNKNOWN = 0;
@@ -37,6 +40,7 @@ public class AntiAddictionKit {
     public static final String TIP_OPEN_BY_TIME_LIMIT = "TIME_LIMIT";
     public static final String TIP_OPEN_BY_PAY_LIMIT = "PAY_LIMIT";
     public static final String TIP_OPEN_BY_CHAT_LIMIT = "CHAT_LIMIT";
+    public static final String TIP_OPEN_REAL_NAME_LIMIT = "REAL_NAME_LIMIT";
 
     private static CommonConfig commonConfig = CommonConfig.getInstance();
     private static FunctionConfig functionConfig = FunctionConfig.getInstance();
@@ -214,17 +218,17 @@ public class AntiAddictionKit {
             return INSTANCE;
         }
 
-        public FunctionConfig setHost(String host){
-            if(host != null &&  !host.contains("http")){
-                throw new RuntimeException("invalid host");
-            }
-            INSTANCE.server_host = host;
-            return INSTANCE;
-        }
+//        public FunctionConfig setHost(String host){
+//            if(host != null &&  !host.contains("http")){
+//                throw new RuntimeException("invalid host");
+//            }
+//            INSTANCE.server_host = host;
+//            return INSTANCE;
+//        }
 
-        public  String getHost(){
-            return INSTANCE.server_host;
-        }
+//        public  String getHost(){
+//            return INSTANCE.server_host;
+//        }
 
         public boolean getUseSdkOnlineTimeLimit(){
             return INSTANCE.useSdkOnlineTimeLimit;
@@ -249,16 +253,14 @@ public class AntiAddictionKit {
 
     public static class CommonConfig {
         private static final CommonConfig INSTANCE = new AntiAddictionKit.CommonConfig();
-        //游客每日游戏时长，单位秒
-        private  int guestTime = 60 * 60;
-        //宵禁起始时间 22点
-        private  int nightStrictStart = 22 * 60 * 60;
-        //宵禁终止时间 8点
-        private  int nightStrictEnd = 8 * 60 * 60;
-        //未成年人非节假日每日游戏时长
-        private  int childCommonTime  = 90 * 60;
-        //未成年人节假日每日游戏时长
-        private  int childHolidayTime = 3 * 60 * 60;
+
+        // 未成年人游戏限制时间范围 起始20点
+        private int timeStrictStart = 20 * 60 * 60;
+        // 未成年人游戏限制时间范围 结束21点
+        private int timeStrictEnd = 21 * 60 * 60;
+        // 未成年人游戏限制时间范围 周期 周五，周六，周天
+        private int[] dayOfWeekArray = new int[] {Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY};
+
         //未成年人每日充值限额,单位分 8-15
         private  int teenPayLimit = 50 *10 * 10;
         //未成年人每月充值限额，单位分 8-15
@@ -291,36 +293,12 @@ public class AntiAddictionKit {
         private String identifyRemain = "您今日游戏时间还剩余#分钟#，请注意适当休息。";
         private String nightStrictRemain = "距离健康保护时间还剩余#分钟#，请注意适当休息。";
         private String nightStrictLimit = "根据国家相关规定，每日 22 点 - 次日 8 点为健康保护时段，当前无法进入游戏。";
+        private String outOfPlayableTimeRangeTips = "您当前为未成年账号，已被纳入防沉迷系统。根据国家相关规定，周五、周六、周日及法定节假日 20 点 -  21 点之外为健康保护时段，当前时间段无法游玩，请合理安排时间。";
 
         private CommonConfig(){
         }
 //
         private static CommonConfig getInstance(){
-            return INSTANCE;
-        }
-
-        public CommonConfig gusterTime(int gusterTime) {
-            INSTANCE.guestTime = gusterTime;
-            return INSTANCE;
-        }
-
-        public CommonConfig nightStrictStart(int nightStrictStart) {
-            INSTANCE.nightStrictStart = nightStrictStart;
-            return INSTANCE;
-        }
-
-        public CommonConfig nightStrictEnd(int nightStrictEnd) {
-            INSTANCE.nightStrictEnd = nightStrictEnd;
-            return INSTANCE;
-        }
-
-        public CommonConfig childCommonTime(int childCommonTime) {
-            INSTANCE.childCommonTime = childCommonTime;
-            return INSTANCE;
-        }
-
-        public CommonConfig childHolidayTime(int childHolidayTime) {
-            INSTANCE.childHolidayTime = childHolidayTime;
             return INSTANCE;
         }
 
@@ -392,24 +370,30 @@ public class AntiAddictionKit {
             return INSTANCE;
         }
 
-        public int getGuestTime() {
-            return  INSTANCE.guestTime;
+        public int getTimeStrictStart() {
+            return INSTANCE.timeStrictStart;
         }
 
-        public int getNightStrictStart() {
-            return  INSTANCE.nightStrictStart;
+        public CommonConfig setTimeStrictStart(int timeStrictStart) {
+            INSTANCE.timeStrictStart = timeStrictStart;
+            return INSTANCE;
         }
 
-        public int getNightStrictEnd() {
-            return  INSTANCE.nightStrictEnd;
+        public int getTimeStrictEnd() {
+            return INSTANCE.timeStrictEnd;
         }
 
-        public int getChildCommonTime() {
-            return  INSTANCE.childCommonTime;
+        public CommonConfig setTimeStrictEnd(int timeStrictEnd) {
+            INSTANCE.timeStrictEnd = timeStrictEnd;
+            return INSTANCE;
         }
 
-        public int getChildHolidayTime() {
-            return  INSTANCE.childHolidayTime;
+        public int[] getDayOfWeekArray() {
+            return dayOfWeekArray;
+        }
+
+        public void setDayOfWeekArray(int[] dayOfWeekArray) {
+            this.dayOfWeekArray = dayOfWeekArray;
         }
 
         public int getTeenPayLimit() {
@@ -480,6 +464,10 @@ public class AntiAddictionKit {
             return INSTANCE.unIdentifyRemain;
         }
 
+        public String getOutOfPlayableTimeRangeTips() {
+            return outOfPlayableTimeRangeTips;
+        }
+
         public void praseJson(JSONObject config) {
             if (config != null) {
                 try {
@@ -488,10 +476,10 @@ public class AntiAddictionKit {
                         LogUtil.logd("update config version = " + INSTANCE.version);
                         JSONObject data = config.getJSONObject("config");
                         // INSTANCE.guestTime = data.optInt("guestTime", 60 * 60);
-                        INSTANCE.childCommonTime = data.optInt("childCommonTime", 30 * 60);
-                        INSTANCE.nightStrictStart = TimeUtil.getTimeByClock(data.optString("nightStrictStart", "22:00"));
-                        INSTANCE.nightStrictEnd = TimeUtil.getTimeByClock(data.optString("nightStrictEnd", "08:00"));
-                        INSTANCE.childHolidayTime = data.optInt("childHolidayTime", 3 * 60 * 60);
+//                        INSTANCE.childCommonTime = data.optInt("childCommonTime", 30 * 60);
+//                        INSTANCE.nightStrictStart = TimeUtil.getTimeByClock(data.optString("nightStrictStart", "22:00"));
+//                        INSTANCE.nightStrictEnd = TimeUtil.getTimeByClock(data.optString("nightStrictEnd", "08:00"));
+//                        INSTANCE.childHolidayTime = data.optInt("childHolidayTime", 3 * 60 * 60);
                         INSTANCE.teenMonthPayLimit = data.optInt("teenMonthPayLimit",200 * 10 * 10);
                         INSTANCE.teenPayLimit = data.optInt("teenPayLimit",50 *10 * 10);
                         INSTANCE.youngPayLimit = data.optInt("youngPayLimit",100 *10 * 10);

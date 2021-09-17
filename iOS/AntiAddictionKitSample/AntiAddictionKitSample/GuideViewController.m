@@ -13,7 +13,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.textView.text = @"SDK使用流程：\n\nApp启动\n\n1.配置sdk功能（可选）\n\n⇩\n\n2.配置用户时长（可选）\n\n⇩\n\n3.设置联网版服务器Host（可选）\n\n⇩\n\n4.初始化sdk（必选！！！）\n\n⇩\n\n5.登录用户login\n\n⇩\n\n6.其他操作\n\n\n\n";
+    self.textView.text = @"SDK使用流程：\n\nApp启动\n\n1.配置sdk功能（可选）\n\n⇩\n\n2.配置未成年日常可玩时间（可选）\n\n⇩\n\n3.初始化sdk（必选！！！）\n\n⇩\n\n4.登录用户login\n\n⇩\n\n5.其他操作\n\n\n\n";
     
     [self.closeButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
 }

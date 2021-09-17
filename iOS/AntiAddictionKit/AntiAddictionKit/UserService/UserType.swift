@@ -59,9 +59,6 @@ extension User {
     }
     
     mutating func updateUserType(_ type: UserType) {
-        if (type == .unknown && self.type != .unknown && AntiAddictionKit.configuration.useSdkRealName) {
-            return
-        }
         
         if (type == self.type) {
             return

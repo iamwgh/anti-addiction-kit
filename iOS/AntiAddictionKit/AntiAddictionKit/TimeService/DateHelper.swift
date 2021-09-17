@@ -34,6 +34,14 @@ final class DateHelper {
         return date
     }
     
+    /// 获取当前日期 无时间差
+    class func nowDate() -> Date {
+//        let secondFromGMT: TimeInterval = TimeInterval(TimeZone.current.secondsFromGMT(for: Date()))
+ //       let nowDate = Date().addingTimeInterval(secondFromGMT)
+        return Date()
+        
+    }
+    
     /// 是否同一天
     class func isSameDay(_ lhs: Date, _ rhs: Date) -> Bool {
         let comparisonResult = gregorianCalendar.compare(lhs, to: rhs, toGranularity: .day)
@@ -75,6 +83,47 @@ final class DateHelper {
 }
 
 extension DateHelper {
+    
+//    判断未成年是否可以玩
+    class func minorCanPaly(_ date: Date) -> Bool {
+        
+        let dayCanPlay = DateHelper.isUseDay(date)
+        if !dayCanPlay {
+            return false
+        }
+    
+        let hour = gregorianCalendar.component(.hour, from: date)
+        let minute = gregorianCalendar.component(.minute, from: date)
+        
+        let playTimeStart = DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayStart)
+        let playTimeEnd = DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayEnd)
+        
+        if (hour >= playTimeStart.hour && hour < playTimeEnd.hour) || (hour == playTimeStart.hour && minute > playTimeStart.minute) || (hour == playTimeEnd.hour && minute < playTimeEnd.minute) {
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    
+    /// 获取距离下次结束时间的间隔
+    /// - Returns: 单位为秒( return >= 0)
+    class func intervalForMinorCanPlay(_ date: Date) -> Int {
+        let endHour = DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayEnd).hour
+        let endMinute = DateHelper.timeSetFromMinorPlayTimeString(AntiAddictionKit.configuration.minorPlayEnd).minute
+        
+        guard let datePlay = gregorianCalendar.date(bySettingHour: endHour, minute: endMinute, second: 0, of: date) else {
+            return Int.max
+        }
+        
+        let interval = Int(max(0, datePlay.timeIntervalSince(date)))
+        return interval
+        
+    }
+    
+    
+    
     
     /// 判断是否宵禁时间
     class func isCurfew(_ date: Date) -> Bool {
@@ -144,6 +193,75 @@ extension DateHelper {
     }
     
     
+    /// 将时分 `20:00` 格式的字符串转化成(小时: 20，分: 0)，24小时制
+    /// - Parameter timeString: 防沉迷时间格式
+    /// - Returns: 小时和分的整数集合 (小时: 20，分: 0)
+    typealias minorPlayTimeSet = (hour: Int, minute: Int)
+    class func timeSetFromMinorPlayTimeString(_ timeString: String) -> minorPlayTimeSet {
+//        检查冒号的index
+        let array = timeString.components(separatedBy: ":")
+        assert(array.count == 2)
+        let hString: String = array[safe: 0] ?? "20"
+        let mString: String = array[safe: 1] ?? "0"
+        let h: Int = Int(hString) ?? 20
+        let m: Int = Int(mString) ?? 0
+        return minorPlayTimeSet(hour:h, minute:m)
+     
+    }
+    
+    
+    
+    
+    class func isUseDay(_ date : Date) -> Bool {
+       
+        let holiday = DateHelper.isHoliday(date)
+        if holiday {
+            return true
+        }
+        let calendar = Calendar.current
+        if let weekday = calendar.dateComponents([.weekday], from: date).weekday {
+//            第一天为 周日:1  2:周一 3:周二 4：周三 5：周四 6：周五 7：周六
+            let weekDayArr = ["日","一","二","三","四","五","六"]
+            let dayArr = AntiAddictionKit.configuration.minorPlayDay
+            var useArr = [Int]()
+            
+            for weekdayStr in weekDayArr {
+                for dayStr in dayArr {
+                    if dayStr.contains(weekdayStr) {
+                        let indexForDay = weekDayArr.firstIndex(of: weekdayStr)  ?? 0
+                        useArr.append(indexForDay + 1)
+                    }
+                }
+            }
+            
+//            当用户可玩天数为空，进行容错处理,默认为：周五、周六、周日
+            if useArr == [] {
+                if weekday == 1 || weekday == 6 || weekday == 7 {
+                    return true
+                }
+                return false
+            }
+            if useArr[0] == 0 {
+                if weekday == 1 || weekday == 6 || weekday == 7 {
+                    return true
+                }
+                return false
+            }
+            
+            for dayCount in useArr {
+                if weekday == dayCount {
+                    return true
+                }
+            }
+                
+            
+
+        }
+        return false
+        
+    }
+    
+    
     /// 是否节假日
     class func isHoliday(_ date: Date) -> Bool {
         
@@ -158,14 +276,16 @@ extension DateHelper {
         let yyyy = String(gregorianCalendar.component(.year, from: date))
         commonDateFormatter.dateFormat = "MMdd"
         let MMdd = commonDateFormatter.string(from: date)
-        let holiday2020: [String] = ["0101", //元旦1天
-                                    "0124", "0125", "0126", "0127", "0128", "0129", "0130", //春节7天
-                                    "0404", "0405", "0406", //清明3天
-                                    "0501", "0502", "0503", "0504", "0505", //劳动节5天
-                                    "0625", "0626", "0627", //端午节 3天
-                                    "1001", "1002", "1003", "1004", "1005", "1006", "1007", "1008" //国庆中秋 8天
+        let holiday2021: [String] = ["0101", //元旦1天
+                                      "0212", "0213", "0214", //春节3天
+                                     "0404", //清明1天
+                                     "0501", //劳动节1天
+                                     "0614", //端午节 1天
+                                     "0921",   // 中秋1天
+                                     "1001", "1002", "1003" //国庆 3天
+            
         ]
-        if yyyy == "2020" && holiday2020.contains(MMdd) {
+        if yyyy == "2021" && holiday2021.contains(MMdd) {
             return true
         }
         
