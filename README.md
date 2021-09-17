@@ -5,8 +5,8 @@ AntiAddictionKit 是为了遵循最新防沉迷政策而编写的一个集实名
 
 ### <p style='color:red'>SDK注意事项：</p>
 
-- SDK只提供了实名认证模板，<span style='color:red'>实名认证现在需要自行接入中宣部实名系统或者间接(第三方实名SDK)接入中宣部使命认证系统</span>，自行接入时调用`setHost`设置自己业务服务器， 通过服务端请求中宣部接口进行实名认证然后返回给客户端。中宣部接入详细请参考[网络游戏防沉迷认证指引](https://wlc.nppa.gov.cn/fcm_company/index.html#/guide)
-- SDK的登录为伪登录，需要游戏自己实现登录或者接入第三方登录，游戏登录时调用login会根据玩家信息触发实名弹窗判断
+* SDK只提供了本地判断，主要面向于单机游戏。若需要接入中宣部实名系统或对接自己的业务服务端，请移步： [联网版文档](https://github.com/taptap/anti-addiction-kit)
+* SDK的登录为伪登录，需要游戏自己实现登录或者接入第三方登录，游戏登录时调用login会根据玩家信息触发实名弹窗判断
 
 
 
@@ -22,7 +22,6 @@ AntiAddictionKit 是为了遵循最新防沉迷政策而编写的一个集实名
 
 ## 文档
 
-[Server](/Server/README.md)
 
 [iOS](/iOS/README.md)
 

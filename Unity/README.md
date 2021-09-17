@@ -245,3 +245,8 @@ int userType = AntiAddiction.OpenSource.AntiAddiction.getUserType("12345");
 AntiAddiction.OpenSource.AntiAddiction.openRealName();
 ```
 调用后结果会通过[实名相关回调](#callback)返回。
+
+## 联网版防沉迷
+SDK只提供了本地判断，主要面向于单机游戏。若需要接入中宣部实名系统或对接自己的业务服务端，请移步： [联网版文档](https://github.com/taptap/anti-addiction-kit)
+
+

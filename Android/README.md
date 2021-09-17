@@ -234,6 +234,7 @@ AntiAddictionKit.getUserType("userId");
 ```
 参数是用户的唯一标识字符串，正常返回值参考[登录类型](#登录类型)。
 
+
 #### 8.打开实名窗口
 > 注意：  
 > 当游戏除了时长和付费限制时，有其他场景需要主动打开实名窗口。则可以通过该接口让用户进行实名，否则不需要调用该接口。如果用户已实名，则该接口直接触发实名成功回调。</font>  
@@ -243,7 +244,9 @@ AntiAddictionKit.getUserType("userId");
 AntiAddictionKit.openRealName();
 ```
 调用后结果会通过[实名相关回调](#callback)返回。
-```
+
 
 ## 联网版防沉迷
-###联网版防沉迷请看[文档](https://github.com/taptap/anti-addiction-kit/)
+SDK只提供了本地判断，主要面向于单机游戏。若需要接入中宣部实名系统或对接自己的业务服务端，请移步： [联网版文档](https://github.com/taptap/anti-addiction-kit)
+
+
