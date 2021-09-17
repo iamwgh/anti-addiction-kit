@@ -1,7 +1,6 @@
 package com.antiaddiction.sdk.utils;
 
 import com.antiaddiction.sdk.AntiAddictionKit;
-import com.antiaddiction.sdk.entity.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -11,24 +10,13 @@ import java.util.Date;
 public class TimeUtil {
     // 2021年节假日
     private static final String[] HOLIDAY_2021 = {
-            "0101","0102","0103", //元旦3天
-            "0211", "0212", "0213", "0214", "0215", "0216", "0217", //春节7天
-            "0402", "0403", "0404", //清明3天
-            "0501", "0502", "0503", "0504", "0505", //劳动节5天
-            "0612", "0613", "0614", //端午节 3天
-            "0919","0920","0921",   // 中秋3天
-            "1001", "1002", "1003", "1004", "1005", "1006", "1007", //国庆 7天
-            "1231" //2022年元旦
-    };
-
-    private static final String[] HOLIDAY_2022 = {
-            "0101","0102", //元旦3天
-            "0131", "0201", "0202", "0203", "0204", "0205", "0206", //春节7天
-            "0403", "0404", "0405", //清明3天
-            "0501", "0502", "0503", "0504", "0505", //劳动节5天
-            "0603", "0604", "0605", //端午节 3天
-            "0909","0910","0911",   // 中秋3天
-            "1001", "1002", "1003", "1004", "1005", "1006", "1007" //国庆 7天
+            "0101", //元旦1天
+            "0212", "0213", "0214", //春节3天
+            "0404", //清明1天
+            "0501", //劳动节1天
+            "0614", //端午节 1天
+            "0921",   // 中秋1天
+            "1001", "1002", "1003", //国庆 3天
     };
 
     /**
@@ -139,8 +127,6 @@ public class TimeUtil {
         String[] currentYear = null;
         if ("2021".equals(year)) {
             currentYear = HOLIDAY_2021;
-        } else if ("2022".equals(year)) {
-            currentYear = HOLIDAY_2022;
         }
         String current = month + day;
         return currentYear != null && Arrays.asList(currentYear).contains(current);
