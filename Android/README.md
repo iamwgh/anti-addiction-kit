@@ -15,7 +15,7 @@ android{
 }
 dependencies{
 	...
-	implementation(name:'antiLib_v1.1.2',ext:'aar')
+	implementation(name:'antiLib_v1.2.0',ext:'aar')
 }
 ```
 ### 接入流程
@@ -26,7 +26,6 @@ dependencies{
 （4）在付费和聊天等场景下，调用 SDK 对应接口进行实名校验  
 （5）用户在游戏内选择登出后，调用 SDK 登出接口同步信息
 
-> 注意：SDK 版本从 1.1.0 开始同时支持联网模式和单机模式，具体设置参考 API 参数配置。联网模式下，项目需要先搭建服务端后台，源码在仓库`Server`目录中，SDK 会将防沉迷信息上传到服务端对应的接口中。单机模式设置不变。
 	
 ### SDK 接口 API
 #### 1.配置参数（采用默认值可跳过）
@@ -38,7 +37,6 @@ useSdkRealName | boolean | true | 是否使用 SDK 实名认证功能
 useSdkPaymentLimit | boolean | true | 是否使用 SDK 付费限制
 useSdkOnlineTimeLimit | boolean | true | 是否使用 SDK 在线时长限制
 showSwitchAccountButton | boolean | true | 是否显示切换账号按钮
-setHost | String | null | 设置服务端域名，若有效，使用联网模式，否则使用单机模式,例如 http://www.anti.test
 
 调用方式示例：
 
@@ -67,11 +65,9 @@ AntiAddictionKit.getCommonConfig()
 
 参数名称 | 参数类型 | 参数默认值 | 参数说明 
 --- |--- |--- | ---
-guestTime | int | 60 * 60 | 游客每日游戏时长，默认1小时，单位 秒
-nightStrictStart | int | 22 * 60 * 60 |未成年宵禁起始时间，默认晚上10点，单位 秒
-nightStrictEnd | int | 8 * 60 * 60 | 未成年宵禁截止时间，默认次日8点， 单位 秒
-childCommonTime | int | 90 * 60 | 未成年人非节假日每日游戏时长，默认1.5小时，单位 秒
-childHolidayTime | int | 3 * 60 * 60 | 未成年人节假日每日游戏时长，默认3小时，单位 秒
+timeStrictStart | int | 20 * 60 * 60 | 未成年人游戏限制起始时间, 默认20点，单位 秒
+timeStrictEnd | int | 21 * 60 * 60 |未成年人游戏限制结束时间，默认21点，单位 秒
+dayOfWeekArray | int[] | {Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY} | 未成年一周可玩星期，默认周五周六周日, 整型数组， Calendar day_of_week 枚举
 teenPayLimit | int | 50 * 10 * 10 | 未成年人（8-15岁）单次充值限额，默认50元，单位 分
 teenMonthPayLimit | int | 300 * 10 * 10 | 未成年人（8-15岁）每月充值限额，默认200元，单位 分
 youngPayLimit | int | 100 * 10 * 10 | 未成年人（16-17岁）单次充值限额，默认100元，单位 分
@@ -230,8 +226,7 @@ AntiAddictionKit.logout();
 ```
 
 #### 7.获取用户类型
-单机模式下，SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户,会返回该用户的类型信息，否则会返回 -1 。  
-联网模式下，用户登录后，调用该接口，会返回当前用户类型，否则返回 -1。  
+SDK 初始化后，游戏可以获取 SDK 内保存的用户类型信息。如果游戏之前已设置过用户,会返回该用户的类型信息，否则会返回 -1 。 
 调用示例如下：
 
 ```
@@ -248,3 +243,7 @@ AntiAddictionKit.getUserType("userId");
 AntiAddictionKit.openRealName();
 ```
 调用后结果会通过[实名相关回调](#callback)返回。
+```
+
+## 联网版防沉迷
+###联网版防沉迷请看[文档](https://github.com/taptap/anti-addiction-kit/)
