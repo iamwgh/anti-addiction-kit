@@ -90,27 +90,32 @@ public class AntiAddictionPlatform {
             JSONObject content = new JSONObject();
             String showDesc = " ";
             try {
-                if (strict == 2) {
-                    //游客
-                    if (AntiAddictionCore.getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
-                        if (seconds > 60) { //15min提示
-                            showDesc = "您的游戏体验时间还剩余 15 分钟，登记实名信息后可深度体验。";
-                        } else { //60倒计时
-                            showDesc = "您的游戏体验时间还剩余 " + seconds +" 秒，登记实名信息后可深度体验。";
-                        }
-                    } else {//未成年人
-                        if (seconds > 60) {
-                            showDesc = "您今日游戏时间还剩余 15 分钟，请注意适当休息。";
-                        } else {
-                            showDesc = "您今日游戏时间还剩余 "+ seconds +" 秒，请注意适当休息。";
-                        }
-                    }
-                }else if(strict == 1){ //宵禁
-                    if (seconds > 60) {
-                        showDesc = "距离健康保护时间还剩余 15 分钟，请注意适当休息。";
-                    } else {
-                        showDesc = "距离健康保护时间还剩余 "+ seconds +" 秒，请注意适当休息。";
-                    }
+//                if (strict == 2) {
+//                    //游客
+//                    if (AntiAddictionCore.getCurrentUser().getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
+//                        if (seconds > 60) { //15min提示
+//                            showDesc = "您的游戏体验时间还剩余 15 分钟，登记实名信息后可深度体验。";
+//                        } else { //60倒计时
+//                            showDesc = "您的游戏体验时间还剩余 " + seconds +" 秒，登记实名信息后可深度体验。";
+//                        }
+//                    } else {//未成年人
+//                        if (seconds > 60) {
+//                            showDesc = "您今日游戏时间还剩余 15 分钟，请注意适当休息。";
+//                        } else {
+//                            showDesc = "您今日游戏时间还剩余 "+ seconds +" 秒，请注意适当休息。";
+//                        }
+//                    }
+//                }else if(strict == 1){ //宵禁
+//                    if (seconds > 60) {
+//                        showDesc = "距离健康保护时间还剩余 15 分钟，请注意适当休息。";
+//                    } else {
+//                        showDesc = "距离健康保护时间还剩余 "+ seconds +" 秒，请注意适当休息。";
+//                    }
+//                }
+                if (seconds > 60) {
+                    showDesc = "您今日游戏时间还剩余 15 分钟，请注意适当休息";
+                } else {
+                    showDesc = "您今日游戏时间还剩余 "+ seconds +" 秒，请注意适当休息";
                 }
                 content.put("desc", showDesc);
                 content.put("title", title);
@@ -378,7 +383,7 @@ public class AntiAddictionPlatform {
                             AntiAddictionCore.getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_TIME_LIMIT,"");
                             AntiAddictionCore.getCallBack().onResult(AntiAddictionKit.CALLBACK_CODE_AAK_WINDOW_SHOWN,"");
                             if (user.getAccountType() > AntiAddictionKit.USER_TYPE_UNKNOWN){
-                                AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_CHILD_QUIT_TIP, titleInf, contentInf, 2, new OnResultListener() {
+                                AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_MINOR_TIME_RANGE_LIMIT, titleInf, AntiAddictionKit.getCommonConfig().getOutOfPlayableTimeRangeTips(), 2, new OnResultListener() {
                                     @Override
                                     public void onResult(int type, String msg) {
                                         if(type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT){
@@ -390,7 +395,7 @@ public class AntiAddictionPlatform {
                             } else { //游客限制
                                 if (!RealNameAndPhoneDialog.Real_Showing) {
                                     if (user.getAccountType() <= AntiAddictionKit.USER_TYPE_UNKNOWN){
-                                        AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_QUIT_TIP, titleInf, contentInf, 3, new OnResultListener() {
+                                        AccountLimitTip.showAccountLimitTip(AccountLimitTip.STATE_UN_REAL_NAME_LIMIT, titleInf, contentInf, 3, new OnResultListener() {
                                             @Override
                                             public void onResult(int type, String msg) {
                                                 if(type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT){

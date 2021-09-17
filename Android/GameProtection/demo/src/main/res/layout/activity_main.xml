@@ -1,149 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <Button
-        android:text="游客登录"
-        android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <Button
-        android:text="5岁登录"
-        android:id="@+id/login2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
-        android:text="成年人登录"
-        android:id="@+id/login3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:text="付费30元"
-        android:id="@+id/pay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:text="登出"
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:text="初始化横屏"
-            android:id="@+id/init_land"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:text="初始化竖屏"
-            android:id="@+id/init_port"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:hint="剩余："
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:text="聊天"
-            android:id="@+id/chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/init_third"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="第三方实名初始化"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="付费120元"
-            android:id="@+id/pay2"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="显示浮窗"
-            android:id="@+id/bt_float"/>
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/netLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="联网模式：关"/>
-        <Spinner
-            android:id="@+id/third_real_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/third_real"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="第三方实名"/>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/et_id1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="userId30"/>
-        <EditText
-            android:layout_marginLeft="20dp"
-            android:id="@+id/et_id2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="userId40"/>
-        <EditText
-            android:layout_marginLeft="20dp"
-            android:id="@+id/et_id3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="userId50"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/pay3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="付费100"/>
-    </LinearLayout>
-    <TextView
-        android:layout_marginTop="50dp"
-        android:text="游客 18分钟 未成年非节假日 16分钟，节假日 20分钟 8-15岁月付费限额 150元 16-17岁月付费限额 200元 宵禁起始时间
-23点"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="游客登录" />
+
+            <Button
+                android:id="@+id/login2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5岁登录" />
+
+            <Button
+                android:id="@+id/login3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="成年人登录" />
+
+            <Button
+                android:id="@+id/pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="付费30元" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登出" />
+
+            <Button
+                android:id="@+id/init_land"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="初始化横屏" />
+
+            <Button
+                android:id="@+id/init_port"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="初始化竖屏" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:hint="剩余：" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="聊天" />
+
+            <Button
+                android:id="@+id/init_third"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第三方实名初始化" />
+
+            <Button
+                android:id="@+id/pay2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="付费120元" />
+
+            <Button
+                android:id="@+id/bt_float"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示浮窗" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/netLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="联网模式：关" />
+
+            <Spinner
+                android:id="@+id/third_real_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/third_real"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第三方实名" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_id1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="userId30" />
+
+            <EditText
+                android:id="@+id/et_id2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="userId40" />
+
+            <EditText
+                android:id="@+id/et_id3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="userId50" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:id="@+id/cb_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期一" />
+
+                <CheckBox
+                    android:id="@+id/cb_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期二" />
+
+                <CheckBox
+                    android:id="@+id/cb_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期三" />
+
+                <CheckBox
+                    android:id="@+id/cb_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="星期四" />
+
+                <CheckBox
+                    android:id="@+id/cb_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="星期五" />
+
+                <CheckBox
+                    android:id="@+id/cb_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="星期六" />
+
+                <CheckBox
+                    android:id="@+id/cb_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="星期日" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner_start_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="100dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner_start_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="100dp" />
+
+            <Spinner
+                android:id="@+id/spinner_end_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:dropDownWidth="100dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner_end_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dropDownWidth="100dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/pay3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="付费100" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="支付限制: 8-15岁月付费限额 150元 16-17岁月付费限额 200元; \n\n未成年人可玩游戏时间段限制: 周五、周六、周日、法定节假日 20:00 至 21:00" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
