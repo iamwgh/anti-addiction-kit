@@ -37,7 +37,7 @@ import AntiAddictionKit
 ```
 
 ## 单机版 vs 联网版
-当前SDK只支持单机版，如果需要联网版，请移步： https://github.com/taptap/anti-addiction-kit 。 
+SDK只提供了单机版，主要面向于单机游戏。若需要接入中宣部实名系统或对接自己的业务服务端，请移步： [联网版文档](https://github.com/taptap/anti-addiction-kit) 
 
 ## 1. SDK 配置（采用默认值可跳过）
 ### 1.1 主要功能配置：

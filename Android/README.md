@@ -246,4 +246,4 @@ AntiAddictionKit.openRealName();
 ```
 
 ## 联网版防沉迷
-###联网版防沉迷请看[文档](https://github.com/taptap/anti-addiction-kit/)
+SDK只提供了本地判断，主要面向于单机游戏。若需要接入中宣部实名系统或对接自己的业务服务端，请移步： [联网版文档](https://github.com/taptap/anti-addiction-kit)
