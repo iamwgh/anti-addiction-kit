@@ -96,6 +96,7 @@ public class AntiAddictionCore {
                     if (null != protectCallBack) {
                         protectCallBack.onAntiAddictionResult(AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME, type);
                     }
+                    currentUser = null;
                     break;
                 case AntiAddictionKit.CALLBACK_CODE_CHAT_LIMIT:
                     if (null != protectCallBack) {
@@ -567,7 +568,10 @@ public class AntiAddictionCore {
                                 public void onResult(int type, String msg) {
                                     if (type == AntiAddictionKit.CALLBACK_CODE_SWITCH_ACCOUNT) {
                                         logout();
+                                    } else if (type == AntiAddictionKit.CALLBACK_CODE_OPEN_REAL_NAME) {
+                                        getCallBack().onResult(type, msg);
                                     } else {
+                                        // 单机版防沉迷只会实名成功不会实名失败
                                         if (type != 0) {
                                             getCallBack().onResult(type, msg);
                                         }

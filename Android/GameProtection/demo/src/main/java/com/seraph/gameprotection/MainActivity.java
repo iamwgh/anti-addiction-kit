@@ -427,7 +427,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                }
                 break;
             case R.id.third_real:
-                AntiAddictionKit.updateUserType(third_real_type);
+                userId = "thirdRealNameID" + third_real_type;
+                AntiAddictionKit.login(userId,third_real_type);
+//                AntiAddictionKit.updateUserType(third_real_type);
                 break;
 
 
